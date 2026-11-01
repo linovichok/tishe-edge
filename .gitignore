@@ -1,0 +1,25 @@
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies, temporary files and test profiles
+node_modules/
+work/
+tmp/
+test-results/
+playwright-report/
+*-profile/
+
+# Packaged extension artifacts
+*.zip
+*.crx
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

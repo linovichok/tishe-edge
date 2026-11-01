@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru" data-theme="north">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Тише — новая вкладка</title>
+  <link rel="icon" href="icons/48.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="glass.css">
+  <link rel="stylesheet" href="search.css">
+  <script src="newtab.js" defer></script>
+  <script src="glass.js" defer></script>
+  <script src="suggestions.js" defer></script>
+</head>
+<body>
+  <div class="landscape" aria-hidden="true"><div class="glow"></div><div class="stars"></div><div class="ridge far"></div><div class="ridge near"></div></div>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span> тише<span class="brand-caption">твоя новая вкладка</span></div>
+    <div class="top-actions"><button id="zen" class="quiet-button" aria-pressed="false" title="Скрыть ссылки и заметку"><svg><use href="#i-spark"/></svg><span>Без суеты</span></button><button id="settings-open" class="icon-button" aria-label="Настройки"><svg><use href="#i-settings"/></svg></button></div>
+  </header>
+  <main>
+    <section class="welcome" aria-label="Время и приветствие">
+      <p id="date" class="eyebrow"></p>
+      <h1 id="clock" aria-label="Текущее время">--:--</h1>
+      <p id="greeting" class="greeting">Хорошо, что ты здесь.</p>
+    </section>
+    <div class="search-area">
+    <form id="search-form" class="search" role="search">
+      <svg class="search-icon" aria-hidden="true"><use href="#i-search"/></svg>
+      <label class="sr-only" for="query">Поисковый запрос</label>
+      <input id="query" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-options" aria-describedby="search-help" placeholder="Куда отправимся?" autocomplete="off" maxlength="2000">
+      <label class="sr-only" for="engine">Поисковая система</label>
+      <select id="engine" aria-label="Поисковая система"><option value="google">Google</option><option value="yandex">Яндекс</option><option value="bing">Bing</option><option value="duck">DuckDuckGo</option></select>
+      <button type="submit" class="search-submit" aria-label="Найти"><svg><use href="#i-arrow"/></svg></button>
+    </form>
+    <div id="search-results" class="search-results" hidden>
+      <div class="results-heading"><span id="results-label">Подсказки</span><span aria-hidden="true">↑ ↓ выбрать · Enter открыть</span></div>
+      <ul id="search-options" role="listbox" aria-label="Подсказки поиска"></ul>
+      <p id="search-status" class="search-status" role="status" aria-live="polite"></p>
+    </div>
+    <span id="search-help" class="sr-only">Во время ввода появляются подсказки. Стрелки вверх и вниз выбирают вариант, Enter открывает, Escape закрывает список.</span>
+    </div>
+    <section class="extras shortcuts-section" aria-labelledby="links-title">
+      <div class="section-heading"><h2 id="links-title">Всегда под рукой</h2><span>любимые места</span></div>
+      <div id="shortcuts" class="shortcuts"></div>
+    </section>
+    <section class="extras focus-card" aria-labelledby="focus-title"><div class="focus-symbol" aria-hidden="true"><svg><use href="#i-spark"/></svg></div><div class="focus-content"><label id="focus-title" for="focus">Что сегодня главное?</label><input id="focus" placeholder="Одна мысль. Одно важное дело." maxlength="160" autocomplete="off"><span id="focus-status" class="focus-status">Личная заметка · сохраняется на этом устройстве</span></div></section>
+  </main>
+  <footer><span><i class="status-dot"></i> Немного тишины в большом интернете</span><button id="theme-next" class="quiet-button"><span class="theme-dot"></span><span id="theme-label">Северное сияние</span><svg><use href="#i-arrow"/></svg></button></footer>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form"><div class="dialog-heading"><div><p class="eyebrow">Сделай своим</p><h2 id="settings-title">Твоё пространство</h2></div><button type="button" class="icon-button close-dialog" aria-label="Закрыть настройки"><svg><use href="#i-close"/></svg></button></div>
+      <label class="field-label" for="name">Как тебя называть?</label><input id="name" class="field" maxlength="32" placeholder="Можно оставить пустым" autocomplete="off">
+      <fieldset><legend>Настроение</legend><div class="theme-options"><label class="theme-option"><input type="radio" name="theme" value="north"><span class="theme-preview north"></span>Север</label><label class="theme-option"><input type="radio" name="theme" value="dusk"><span class="theme-preview dusk"></span>Сумерки</label><label class="theme-option"><input type="radio" name="theme" value="dawn"><span class="theme-preview dawn"></span>Рассвет</label></div></fieldset>
+      <label class="check-row"><input id="show-clock" type="checkbox"> Показывать часы</label>
+      <label class="check-row online-check"><input id="online-suggestions" type="checkbox"> Подсказки поисковика при вводе</label>
+      <p class="privacy-note">Настройки и заметка хранятся в этом браузере. При включённых онлайн-подсказках текст из поисковой строки отправляется выбранному поисковику во время ввода. При выключенных — только после запуска поиска.</p>
+      <button class="primary-button" type="submit">Сохранить</button>
+    </form>
+  </dialog>
+  <dialog id="link-dialog" aria-labelledby="link-title"><form id="link-form"><div class="dialog-heading"><h2 id="link-title">Новое любимое место</h2><button type="button" class="icon-button close-dialog" aria-label="Закрыть редактор ссылки"><svg><use href="#i-close"/></svg></button></div><label class="field-label" for="link-name">Название</label><input id="link-name" class="field" required maxlength="24" placeholder="Например, Музыка"><label class="field-label" for="link-url">Адрес сайта</label><input id="link-url" class="field" required maxlength="2048" placeholder="example.com" autocapitalize="off" spellcheck="false"><p id="link-error" class="error" role="alert"></p><div class="dialog-actions"><button id="link-delete" type="button" class="danger-button" hidden>Удалить</button><button class="primary-button" type="submit">Сохранить</button></div></form></dialog>
+  <p id="toast" class="toast" role="status" hidden></p>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l5-1L20 8a2.8 2.8 0 0 0-4-4L5 15z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m9 3-.7 2.2-2 .9L4 5.7l-2 3.5 1.6 1.7v2.2L2 14.8l2 3.5 2.3-.4 2 .9L9 21h6l.7-2.2 2-.9 2.3.4 2-3.5-1.6-1.7v-2.2L22 9.2l-2-3.5-2.3.4-2-.9L15 3z"/></symbol>
+  </defs></svg>
+</body>
+</html>
