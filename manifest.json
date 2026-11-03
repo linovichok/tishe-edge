@@ -2,14 +2,15 @@
   "manifest_version": 3,
   "name": "Тише — новая вкладка",
   "short_name": "Тише",
-  "version": "1.3.0",
-  "description": "Спокойная новая вкладка: Liquid Glass, живые фоны, свои картинки и видео, часы, поиск и любимые сайты.",
+  "version": "1.4.0",
+  "description": "Спокойная новая вкладка: Liquid Glass, свои картинки и видео, живые фоны, переводчик, часы и поиск.",
   "chrome_url_overrides": { "newtab": "newtab.html" },
   "host_permissions": [
     "https://suggestqueries.google.com/*",
     "https://suggest.yandex.net/*",
     "https://api.bing.com/*",
-    "https://duckduckgo.com/*"
+    "https://duckduckgo.com/*",
+    "https://api.mymemory.translated.net/*"
   ],
   "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
   "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'" }

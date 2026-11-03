@@ -10,10 +10,12 @@
   <link rel="stylesheet" href="glass.css">
   <link rel="stylesheet" href="search.css">
   <link rel="stylesheet" href="background.css">
+  <link rel="stylesheet" href="translator.css">
   <script src="newtab.js" defer></script>
   <script src="glass.js" defer></script>
   <script src="suggestions.js" defer></script>
   <script src="background.js" defer></script>
+  <script src="translator.js" defer></script>
 </head>
 <body>
   <div class="landscape" aria-hidden="true"><div class="glow"></div><div class="aurora-ribbon"></div><div class="stars"></div><div class="ridge far"></div><div class="ridge near"></div><div id="custom-background" hidden><img id="background-image" alt="" hidden><video id="background-video" muted loop playsinline preload="metadata" hidden></video><div class="background-shade"></div></div></div>
@@ -48,6 +50,17 @@
       <div id="shortcuts" class="shortcuts"></div>
     </section>
     <section class="extras focus-card" aria-labelledby="focus-title"><div class="focus-symbol" aria-hidden="true"><svg><use href="#i-spark"/></svg></div><div class="focus-content"><label id="focus-title" for="focus">Что сегодня главное?</label><input id="focus" placeholder="Одна мысль. Одно важное дело." maxlength="160" autocomplete="off"><span id="focus-status" class="focus-status">Личная заметка · сохраняется на этом устройстве</span></div></section>
+    <details class="extras translator-card" id="translator-card">
+      <summary><span class="translator-heading"><svg aria-hidden="true"><use href="#i-language"/></svg><span>Переводчик</span></span><span class="translator-summary"><span id="translator-pair">EN → RU</span><svg aria-hidden="true"><use href="#i-chevron"/></svg></span></summary>
+      <form id="translator-form" class="translator-body">
+        <div class="translator-languages"><div><label for="translator-from">С языка</label><select id="translator-from"></select></div><button id="translator-swap" class="icon-button" type="button" aria-label="Поменять языки местами" title="Поменять языки местами"><svg><use href="#i-swap"/></svg></button><div><label for="translator-to">На язык</label><select id="translator-to"></select></div></div>
+        <label for="translator-input" class="sr-only">Текст для перевода</label><textarea id="translator-input" rows="3" maxlength="1000" placeholder="Напиши или вставь текст…" spellcheck="false" aria-describedby="translator-disclosure"></textarea>
+        <div class="translator-actions"><span id="translator-count">0 / 1000</span><button id="translator-clear" class="quiet-button" type="button">Очистить</button><button id="translator-cancel" class="quiet-button" type="button" hidden>Отменить</button><button id="translator-submit" class="primary-button" type="submit">Перевести</button></div>
+        <div id="translator-result" hidden><div class="translator-result-heading"><label for="translator-output">Перевод</label><button id="translator-copy" class="quiet-button" type="button"><svg><use href="#i-copy"/></svg>Копировать</button></div><textarea id="translator-output" rows="3" readonly spellcheck="false" aria-label="Результат перевода"></textarea></div>
+        <p id="translator-status" role="status" aria-live="polite"></p>
+        <p id="translator-disclosure">Текст отправляется <a href="https://mymemory.translated.net/" target="_blank" rel="noopener noreferrer">MyMemory</a> только по кнопке «Перевести». Нужен интернет; действуют лимиты сервиса.</p>
+      </form>
+    </details>
   </main>
   <footer><span><i class="status-dot"></i> Немного тишины в большом интернете</span><button id="theme-next" class="quiet-button"><span class="theme-dot"></span><span id="theme-label">Северное сияние</span><svg><use href="#i-arrow"/></svg></button></footer>
   <dialog id="settings-dialog" aria-labelledby="settings-title">
@@ -83,6 +96,10 @@
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8z"/></symbol>
+    <symbol id="i-language" viewBox="0 0 24 24"><path d="M3 5h10M8 3v2M11 5c-1 6-4 9-8 11M5 8c1 3 3 5 6 7m2 6 4-11 4 11m-6.5-4h5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h15m-4-4 4 4-4 4M20 16H5m4-4-4 4 4 4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l5-1L20 8a2.8 2.8 0 0 0-4-4L5 15z"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m9 3-.7 2.2-2 .9L4 5.7l-2 3.5 1.6 1.7v2.2L2 14.8l2 3.5 2.3-.4 2 .9L9 21h6l.7-2.2 2-.9 2.3.4 2-3.5-1.6-1.7v-2.2L22 9.2l-2-3.5-2.3.4-2-.9L15 3z"/></symbol>
