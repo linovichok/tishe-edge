@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Тише — новая вкладка",
   "short_name": "Тише",
-  "version": "1.2.1",
-  "description": "Спокойная новая вкладка для Chromium-браузеров: Liquid Glass, часы, поиск, любимые сайты и фокус на сегодня.",
+  "version": "1.3.0",
+  "description": "Спокойная новая вкладка: Liquid Glass, живые фоны, свои картинки и видео, часы, поиск и любимые сайты.",
   "chrome_url_overrides": { "newtab": "newtab.html" },
   "host_permissions": [
     "https://suggestqueries.google.com/*",

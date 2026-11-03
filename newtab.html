@@ -9,15 +9,17 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="glass.css">
   <link rel="stylesheet" href="search.css">
+  <link rel="stylesheet" href="background.css">
   <script src="newtab.js" defer></script>
   <script src="glass.js" defer></script>
   <script src="suggestions.js" defer></script>
+  <script src="background.js" defer></script>
 </head>
 <body>
-  <div class="landscape" aria-hidden="true"><div class="glow"></div><div class="stars"></div><div class="ridge far"></div><div class="ridge near"></div></div>
+  <div class="landscape" aria-hidden="true"><div class="glow"></div><div class="aurora-ribbon"></div><div class="stars"></div><div class="ridge far"></div><div class="ridge near"></div><div id="custom-background" hidden><img id="background-image" alt="" hidden><video id="background-video" muted loop playsinline preload="metadata" hidden></video><div class="background-shade"></div></div></div>
   <header class="topbar">
     <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span> тише<span class="brand-caption">твоя новая вкладка</span></div>
-    <div class="top-actions"><button id="zen" class="quiet-button" aria-pressed="false" title="Скрыть ссылки и заметку"><svg><use href="#i-spark"/></svg><span>Без суеты</span></button><button id="settings-open" class="icon-button" aria-label="Настройки"><svg><use href="#i-settings"/></svg></button></div>
+    <div class="top-actions"><button id="background-pause" class="icon-button" aria-label="Приостановить фон" title="Приостановить фон"><svg><use href="#i-pause"/></svg></button><button id="zen" class="quiet-button" aria-pressed="false" title="Скрыть ссылки и заметку"><svg><use href="#i-spark"/></svg><span>Без суеты</span></button><button id="settings-open" class="icon-button" aria-label="Настройки"><svg><use href="#i-settings"/></svg></button></div>
   </header>
   <main>
     <section class="welcome" aria-label="Время и приветствие">
@@ -52,6 +54,20 @@
     <form id="settings-form"><div class="dialog-heading"><div><p class="eyebrow">Сделай своим</p><h2 id="settings-title">Твоё пространство</h2></div><button type="button" class="icon-button close-dialog" aria-label="Закрыть настройки"><svg><use href="#i-close"/></svg></button></div>
       <label class="field-label" for="name">Как тебя называть?</label><input id="name" class="field" maxlength="32" placeholder="Можно оставить пустым" autocomplete="off">
       <fieldset><legend>Настроение</legend><div class="theme-options"><label class="theme-option"><input type="radio" name="theme" value="north"><span class="theme-preview north"></span>Север</label><label class="theme-option"><input type="radio" name="theme" value="dusk"><span class="theme-preview dusk"></span>Сумерки</label><label class="theme-option"><input type="radio" name="theme" value="dawn"><span class="theme-preview dawn"></span>Рассвет</label></div></fieldset>
+      <fieldset class="background-settings"><legend>Фон новой вкладки</legend>
+        <div class="background-options"><label><input type="radio" name="background-mode" value="landscape"><span>Пейзаж</span></label><label><input type="radio" name="background-mode" value="aurora"><span>Живое сияние</span></label><label><input type="radio" name="background-mode" value="custom"><span>Свой фон</span></label></div>
+        <div id="background-upload" hidden>
+          <div class="background-preview" id="background-preview"><img id="background-preview-image" alt="Предпросмотр своего фона" hidden><span id="background-file-label">Выбери картинку, GIF или видео</span></div>
+          <label for="background-file" class="upload-button">Выбрать файл</label><input id="background-file" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,video/mp4,video/webm">
+          <button id="background-remove" type="button" class="quiet-button">Убрать свой фон</button>
+          <p class="background-hint">JPG, PNG, WebP, GIF, AVIF — до 20 МБ.<br>MP4, WebM — до 60 МБ, воспроизводятся без звука.</p>
+          <label for="background-dim" class="dim-label">Затемнение <output id="background-dim-value" for="background-dim">35%</output></label><input id="background-dim" type="range" min="0" max="80" step="5" value="35">
+        </div>
+        <label class="check-row background-motion-row"><input id="background-motion" type="checkbox"> Анимация фона</label>
+        <p id="background-motion-note" class="background-hint" hidden>В системе включено уменьшение движения. Покажем неподвижный фон.</p>
+        <p id="background-error" class="background-error" role="alert"></p>
+        <p class="background-hint">Файл остаётся в этом браузере. Изменения применятся после сохранения.</p>
+      </fieldset>
       <label class="check-row"><input id="show-clock" type="checkbox"> Показывать часы</label>
       <label class="check-row online-check"><input id="online-suggestions" type="checkbox"> Подсказки поисковика при вводе</label>
       <p class="privacy-note">Настройки и заметка хранятся в этом браузере. При включённых онлайн-подсказках текст из поисковой строки отправляется выбранному поисковику во время ввода. При выключенных — только после запуска поиска.</p>
@@ -65,6 +81,8 @@
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8z"/></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l5-1L20 8a2.8 2.8 0 0 0-4-4L5 15z"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m9 3-.7 2.2-2 .9L4 5.7l-2 3.5 1.6 1.7v2.2L2 14.8l2 3.5 2.3-.4 2 .9L9 21h6l.7-2.2 2-.9 2.3.4 2-3.5-1.6-1.7v-2.2L22 9.2l-2-3.5-2.3.4-2-.9L15 3z"/></symbol>

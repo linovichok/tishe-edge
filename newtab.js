@@ -3,7 +3,7 @@ const $ = (selector) => document.querySelector(selector);
 const KEY = 'tishe.v1';
 const THEMES = { north: 'Северное сияние', dusk: 'Тихие сумерки', dawn: 'Первый свет' };
 const ENGINES = { google: 'https://www.google.com/search?q=', yandex: 'https://yandex.ru/search/?text=', bing: 'https://www.bing.com/search?q=', duck: 'https://duckduckgo.com/?q=' };
-const DEFAULTS = { name: '', theme: 'north', engine: 'google', showClock: true, onlineSuggestions: true, zen: false, focus: '', links: [
+const DEFAULTS = { name: '', theme: 'north', engine: 'google', showClock: true, onlineSuggestions: true, zen: false, focus: '', background: { mode: 'aurora', motion: true, dim: 35, assetId: '' }, links: [
   { name: 'YouTube', url: 'https://www.youtube.com/', mark: '▶', tone: 'red' },
   { name: 'Музыка', url: 'https://music.yandex.ru/', mark: '♪', tone: 'yellow' },
   { name: 'Telegram', url: 'https://web.telegram.org/', mark: '↗', tone: 'blue' },
@@ -29,6 +29,13 @@ function load() {
   if (typeof value.showClock === 'boolean') clean.showClock = value.showClock;
   if (typeof value.onlineSuggestions === 'boolean') clean.onlineSuggestions = value.onlineSuggestions;
   if (typeof value.zen === 'boolean') clean.zen = value.zen;
+  if (value.background && typeof value.background === 'object') {
+    const background = value.background;
+    if (['landscape', 'aurora', 'custom'].includes(background.mode)) clean.background.mode = background.mode;
+    if (typeof background.motion === 'boolean') clean.background.motion = background.motion;
+    if (typeof background.dim === 'number' && Number.isFinite(background.dim)) clean.background.dim = Math.max(0, Math.min(80, background.dim));
+    if (typeof background.assetId === 'string') clean.background.assetId = background.assetId.slice(0, 100);
+  }
   if (Array.isArray(value.links)) clean.links = value.links.slice(0, 17).flatMap(link => {
     try {
       if (!link || typeof link.name !== 'string' || !link.name.trim()) return [];
@@ -67,6 +74,7 @@ function apply() {
   if (document.activeElement !== $('#focus')) $('#focus').value = state.focus;
   tick();
   window.tisheSearch?.refresh();
+  window.tisheBackground?.apply();
 }
 function icon(id) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -120,13 +128,33 @@ $('#settings-open').addEventListener('click', () => {
   $('#name').value = state.name; $('#show-clock').checked = state.showClock;
   $('#online-suggestions').checked = state.onlineSuggestions;
   $(`input[name="theme"][value="${state.theme}"]`).checked = true;
+  window.tisheBackground?.openSettings();
   $('#settings-dialog').showModal();
 });
-$('#settings-form').addEventListener('submit', event => {
-  event.preventDefault(); state.name = $('#name').value.trim(); state.showClock = $('#show-clock').checked;
-  state.onlineSuggestions = $('#online-suggestions').checked;
-  state.theme = $('input[name="theme"]:checked').value;
-  apply(); if (save()) { $('#settings-dialog').close(); notify('Теперь здесь ещё уютнее. Настройки сохранены.'); }
+let settingsSaving = false;
+$('#settings-dialog').addEventListener('cancel', event => { if (settingsSaving) event.preventDefault(); });
+$('#settings-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (settingsSaving) return;
+  settingsSaving = true;
+  const controls = [...$('#settings-form').querySelectorAll('button, input, select')].map(control => ({ control, disabled: control.disabled }));
+  controls.forEach(({ control }) => { control.disabled = true; });
+  const previous = structuredClone(state);
+  try {
+    const background = await window.tisheBackground?.prepare();
+    if (background) state.background = background;
+    state.name = $('#name').value.trim(); state.showClock = $('#show-clock').checked;
+    state.onlineSuggestions = $('#online-suggestions').checked;
+    state.theme = $('input[name="theme"]:checked').value;
+    if (!save()) { state = previous; await window.tisheBackground?.rollback(); return; }
+    apply();
+    await window.tisheBackground?.finish(previous.background.assetId);
+    $('#settings-dialog').close(); notify('Теперь здесь ещё уютнее. Настройки сохранены.');
+  } catch (error) {
+    state = previous;
+    await window.tisheBackground?.rollback();
+    $('#background-error').textContent = error.message || 'Не удалось сохранить фон. Попробуй другой файл.';
+  } finally { settingsSaving = false; controls.forEach(({ control, disabled }) => { control.disabled = disabled; }); }
 });
 document.querySelectorAll('.close-dialog').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
 $('#link-form').addEventListener('submit', event => {
